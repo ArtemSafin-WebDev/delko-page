@@ -47,4 +47,42 @@ document.addEventListener("DOMContentLoaded", () => {
   formsToValidate.forEach((form) => {
     $(form).parsley();
   });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.matches("a") || event.target.closest("a")) {
+      const link = event.target.matches("a")
+        ? event.target
+        : event.target.closest("a");
+      const hash = link.hash;
+
+      console.log("Hash", hash);
+
+      if (hash && hash.startsWith("#to-")) {
+        event.preventDefault();
+
+        const elementToScroll = document.getElementById(
+          hash.replace(/^#to\-/, "")
+        );
+        if (elementToScroll) {
+          if (window.menuOpen) {
+            window.closeMenu();
+          } else {
+            console.log("menu not open");
+          }
+
+          gsap.to(window, {
+            duration: 2,
+            ease: "power2.out",
+            scrollTo: {
+              y: elementToScroll,
+              autoKill: false,
+              offsetY: 80,
+            },
+          });
+        } else {
+          console.error("No element to scroll");
+        }
+      }
+    }
+  });
 });
